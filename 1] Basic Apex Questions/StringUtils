@@ -1,0 +1,47 @@
+public class StringUtils {
+    
+    public static String reverseString(String input) {
+       
+        if (input == null) return null;
+        if (input.length() <= 1) return input;
+        
+       
+        List<String> chars = input.split('');
+        Integer left = 0;
+        Integer right = chars.size() - 1;
+        
+       
+        while (left < right) {
+           
+            String temp = chars[left];
+            chars[left] = chars[right];
+            chars[right] = temp;
+            
+            left++;
+            right--;
+        }
+        
+        
+        return String.join(chars, '');
+    }
+    
+    public static String reverseStringAlt(String input) {
+        if (input == null) return null;
+        
+        
+        String reversed = '';
+        for (Integer i = input.length() - 1; i >= 0; i--) {
+            reversed += input.substring(i, i + 1);
+        }
+        return reversed;
+    }
+}
+
+/* ----------------- o/p -------------
+
+String original = 'Hello Salesforce';
+String reversed = StringUtils.reverseString(original);
+System.debug('Original: ' + original);
+System.debug('Reversed: ' + reversed);
+
+*/
