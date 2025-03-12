@@ -1,0 +1,26 @@
+global class CloseStaleLeads implements Schedulable {
+    global void execute(SchedulableContext sc) {
+        Date ninetyDaysAgo = Date.today().addDays(-90);
+
+        List<Lead> staleLeads = [
+            SELECT Id, Status 
+            FROM Lead 
+            WHERE Status = 'Open - Not Contacted' 
+            AND CreatedDate <= :ninetyDaysAgo
+        ];
+
+        for (Lead l : staleLeads) {
+            l.Status = 'Closed - Not Converted';
+        }
+
+        if (!staleLeads.isEmpty()) {
+            update staleLeads;
+        }
+    }
+}
+
+/* -------o/p--------
+CloseStaleLeads job = new CloseStaleLeads();
+String cronExpression = '0 0 0 1 1,4,7,10 ? *'; // Runs on Jan 1, Apr 1, Jul 1, Oct 1
+System.schedule('Quarterly Close Stale Leads', cronExpression, job);
+*/
