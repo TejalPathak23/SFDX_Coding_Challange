@@ -36,7 +36,7 @@ public class FibonacciCalculator {
 }
 
 /* ------------- o/p ---------------
-// Call the method with a max value of 50 (feel free to change this value)
+
 List<Integer> fibSeries = FibonacciCalculator.getFibonacciSeries(50);
 System.debug('Fibonacci series up to 50: ' + fibSeries);
 
