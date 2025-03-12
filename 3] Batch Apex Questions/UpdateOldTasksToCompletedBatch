@@ -1,0 +1,22 @@
+global class UpdateOldTasksToCompletedBatch implements Database.Batchable<SObject> {
+    global Database.QueryLocator start(Database.BatchableContext bc) {
+        Date cutoffDate = Date.today().addDays(-365);
+        return Database.getQueryLocator([SELECT Id, Status FROM Task WHERE CreatedDate < :cutoffDate AND Status != 'Completed']);
+    }
+    
+    global void execute(Database.BatchableContext bc, List<Task> scope) {
+        for (Task t : scope) {
+            t.Status = 'Completed';
+        }
+        update scope;
+    }
+    
+    global void finish(Database.BatchableContext bc) {
+        System.debug('Batch execution completed');
+    }
+}
+
+/*
+UpdateOldTasksToCompletedBatch batchJob = new UpdateOldTasksToCompletedBatch();
+Database.executeBatch(batchJob);
+*/
