@@ -33,7 +33,6 @@ public class PalindromeChecker {
 }
 
 /* --------- o/p code ---------
-// Test the palindrome checker with various inputs
 System.debug('Is "racecar" a palindrome? ' + PalindromeChecker.isPalindrome('racecar'));
 System.debug('Is "A man, a plan, a canal: Panama" a palindrome? ' + PalindromeChecker.isPalindrome('A man, a plan, a canal: Panama'));
 System.debug('Is "hello" a palindrome? ' + PalindromeChecker.isPalindrome('hello'));
