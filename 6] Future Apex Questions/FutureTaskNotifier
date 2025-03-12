@@ -1,0 +1,27 @@
+public class FutureTaskNotifier {
+    @future
+    public static void sendTaskCompletionEmail(Set<Id> taskIds) {
+        List<Task> tasks = [SELECT Id, OwnerId, Subject FROM Task WHERE Id IN :taskIds];
+
+        List<Messaging.SingleEmailMessage> emails = new List<Messaging.SingleEmailMessage>();
+
+        for (Task t : tasks) {
+            User taskOwner = [SELECT Id, Email FROM User WHERE Id = :t.OwnerId LIMIT 1];
+
+            Messaging.SingleEmailMessage email = new Messaging.SingleEmailMessage();
+            email.setToAddresses(new List<String>{taskOwner.Email});
+            email.setSubject('Task Completed: ' + t.Subject);
+            email.setPlainTextBody('Your task "' + t.Subject + '" has been marked as Completed.');
+
+            emails.add(email);
+        }
+
+        if (!emails.isEmpty()) {
+            Messaging.sendEmail(emails);
+        }
+    }
+}
+/*
+Set<Id> taskIds = new Set<Id>{'00TXXXXXXXXXXXX'}; // Replace with actual Task Id
+FutureTaskNotifier.sendTaskCompletionEmail(taskIds);
+*/
