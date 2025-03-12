@@ -1,0 +1,26 @@
+public class ApplyDiscountToNegotiationOpportunities implements Queueable {
+    public void execute(QueueableContext context) {
+        // Query Opportunities in the "Negotiation" stage
+        List<Opportunity> opportunitiesToUpdate = [
+            SELECT Id, Amount
+            FROM Opportunity
+            WHERE StageName = 'Negotiation'
+        ];
+        
+        // Apply a 5% discount to the Amount field
+        for (Opportunity opp : opportunitiesToUpdate) {
+            opp.Amount *= 0.95;
+        }
+        
+        // Update the Opportunities
+        if (!opportunitiesToUpdate.isEmpty()) {
+            update opportunitiesToUpdate;
+        }
+    }
+}
+
+/* ----- o/p ------
+ApplyDiscountToNegotiationOpportunities job = new ApplyDiscountToNegotiationOpportunities();
+System.enqueueJob(job);
+
+*/
