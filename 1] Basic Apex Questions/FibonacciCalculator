@@ -1,0 +1,43 @@
+public class FibonacciCalculator {
+   
+    public static List<Integer> getFibonacciSeries(Integer maxValue) {
+        List<Integer> series = new List<Integer>();
+        
+       
+        if (maxValue < 0) {
+            return series;
+        }
+        
+      
+        Integer a = 0;
+        Integer b = 1;
+        
+       
+        if(a <= maxValue) {
+            series.add(a);
+        }
+        if(b <= maxValue) {
+            series.add(b);
+        }
+        
+       
+        while (true) {
+            Integer next = a + b;
+            if (next > maxValue) {
+                break;
+            }
+            series.add(next);
+            a = b;
+            b = next;
+        }
+        
+        return series;
+    }
+}
+
+/* ------------- o/p ---------------
+// Call the method with a max value of 50 (feel free to change this value)
+List<Integer> fibSeries = FibonacciCalculator.getFibonacciSeries(50);
+System.debug('Fibonacci series up to 50: ' + fibSeries);
+
+*/
