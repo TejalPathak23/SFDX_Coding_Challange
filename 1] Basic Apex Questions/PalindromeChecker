@@ -1,0 +1,43 @@
+public class PalindromeChecker {
+    
+    public static Boolean isPalindrome(String input) {
+
+        if (input == null || input.trim() == '') {
+            return false;
+        }
+        
+
+        String cleanedInput = input.toLowerCase().replaceAll('[^a-z0-9]', '');
+        
+      
+        if (cleanedInput.length() == 0) {
+            return false;
+        }
+        
+        
+        Integer left = 0;
+        Integer right = cleanedInput.length() - 1;
+        
+        while (left < right) {
+            if (cleanedInput.charAt(left) != cleanedInput.charAt(right)) {
+                return false;
+            }
+            left++;
+            right--;
+        }
+        
+        return true;
+    }
+    
+ 
+}
+
+/* --------- o/p code ---------
+// Test the palindrome checker with various inputs
+System.debug('Is "racecar" a palindrome? ' + PalindromeChecker.isPalindrome('racecar'));
+System.debug('Is "A man, a plan, a canal: Panama" a palindrome? ' + PalindromeChecker.isPalindrome('A man, a plan, a canal: Panama'));
+System.debug('Is "hello" a palindrome? ' + PalindromeChecker.isPalindrome('hello'));
+System.debug('Is "12321" a palindrome? ' + PalindromeChecker.isPalindrome('12321'));
+System.debug('Is null a palindrome? ' + PalindromeChecker.isPalindrome(null));
+System.debug('Is empty string a palindrome? ' + PalindromeChecker.isPalindrome(''));
+*/
