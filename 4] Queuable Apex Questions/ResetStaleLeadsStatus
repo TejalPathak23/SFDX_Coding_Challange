@@ -1,0 +1,29 @@
+public class ResetStaleLeadsStatus implements Queueable {
+    public void execute(QueueableContext context) {
+        // Calculate the date 30 days ago from today
+        Date thirtyDaysAgo = Date.today().addDays(-30);
+        
+        // Query Leads with 'Working' status for over 30 days
+        List<Lead> leadsToUpdate = [
+            SELECT Id, Status, LastModifiedDate
+            FROM Lead
+            WHERE Status = 'Working'
+            AND LastModifiedDate < :thirtyDaysAgo
+        ];
+        
+        // Reset the Status to 'New'
+        for (Lead lead : leadsToUpdate) {
+            lead.Status = 'New';
+        }
+        
+        // Update the Leads
+        if (!leadsToUpdate.isEmpty()) {
+            update leadsToUpdate;
+        }
+    }
+}
+
+/* ----------- o/p --------
+ResetStaleLeadsStatus job = new ResetStaleLeadsStatus();
+System.enqueueJob(job);
+*/
