@@ -1,0 +1,18 @@
+global class IncreaseOpportunityAmountBatch implements Database.Batchable<SObject> {
+    global Database.QueryLocator start(Database.BatchableContext bc) {
+        return Database.getQueryLocator(
+            'SELECT Id, Amount FROM Opportunity WHERE StageName = \'Negotiation\' AND Amount != NULL'
+        );
+    }
+
+    global void execute(Database.BatchableContext bc, List<Opportunity> scope) {
+        for (Opportunity opp : scope) {
+            opp.Amount *= 1.10;
+        }
+        update scope;
+    }
+
+    global void finish(Database.BatchableContext bc) {
+        System.debug('Batch execution completed.');
+    }
+}
