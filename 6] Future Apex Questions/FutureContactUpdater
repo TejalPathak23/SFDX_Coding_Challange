@@ -1,0 +1,19 @@
+public class FutureContactUpdater {
+    @future
+    public static void updateContactPhones(Set<Id> contactIds, String newPhone) {
+        List<Contact> contactsToUpdate = [SELECT Id, Phone FROM Contact WHERE Id IN :contactIds];
+
+        for (Contact c : contactsToUpdate) {
+            c.Phone = newPhone;
+        }
+
+        if (!contactsToUpdate.isEmpty()) {
+            update contactsToUpdate;
+        }
+    }
+}
+
+/*
+Set<Id> contactIds = new Set<Id>{'003XXXXXXXXXXXX', '003YYYYYYYYYYYY'}; // Replace with actual Contact Ids
+FutureContactUpdater.updateContactPhones(contactIds, '123-456-7890');
+*/
