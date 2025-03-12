@@ -1,0 +1,24 @@
+public class FutureCaseCloser {
+    @future
+    public static void closePendingCases(Set<Id> caseIds) {
+        List<Case> casesToUpdate = [
+            SELECT Id, Status, LastModifiedDate 
+            FROM Case 
+            WHERE Id IN :caseIds 
+            AND Status = 'Pending'
+            AND LastModifiedDate <= :System.today().addDays(-5)
+        ];
+
+        for (Case c : casesToUpdate) {
+            c.Status = 'Closed';
+        }
+
+        if (!casesToUpdate.isEmpty()) {
+            update casesToUpdate;
+        }
+    }
+}
+/*
+Set<Id> caseIds = new Set<Id>{'500XXXXXXXXXXXX'}; // Replace with actual Case Id
+FutureCaseCloser.closePendingCases(caseIds);
+*/
