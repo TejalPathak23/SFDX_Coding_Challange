@@ -1,0 +1,7 @@
+trigger SetLastNameTrigger on Contact (before insert) {
+    for (Contact con : Trigger.new) {
+        if (con.LastName == null || con.LastName.trim() == '') {
+            con.LastName = 'Unknown';
+        }
+    }
+}
