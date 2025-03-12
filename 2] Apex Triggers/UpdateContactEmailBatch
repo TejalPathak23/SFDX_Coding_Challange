@@ -1,0 +1,22 @@
+global class UpdateContactEmailBatch implements Database.Batchable<SObject> {
+    global Database.QueryLocator start(Database.BatchableContext bc) {
+        return Database.getQueryLocator('SELECT Id, Email FROM Contact WHERE Email LIKE \'%@oldcompany.com\'');
+    }
+
+    global void execute(Database.BatchableContext bc, List<Contact> scope) {
+        for (Contact con : scope) {
+            con.Email = con.Email.replace('@oldcompany.com', '@newcompany.com');
+        }
+        update scope;
+    }
+
+    global void finish(Database.BatchableContext bc) {
+        System.debug('Batch execution completed.');
+    }
+}
+
+/* ----- o/p -------
+UpdateContactEmailBatch batchJob = new UpdateContactEmailBatch();
+Database.executeBatch(batchJob);
+
+*/
