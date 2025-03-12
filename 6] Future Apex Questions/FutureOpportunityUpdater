@@ -1,0 +1,21 @@
+public class FutureOpportunityUpdater {
+    @future
+    public static void updateOpportunityAmount(Set<Id> opportunityIds) {
+        List<Opportunity> oppsToUpdate = [SELECT Id, Amount FROM Opportunity WHERE Id IN :opportunityIds];
+
+        for (Opportunity opp : oppsToUpdate) {
+            if (opp.Amount != null) {
+                opp.Amount *= 1.1;
+            }
+        }
+
+        if (!oppsToUpdate.isEmpty()) {
+            update oppsToUpdate;
+        }
+    }
+}
+
+/*
+ Set<Id> oppIds = new Set<Id>{'006XXXXXXXXXXXX'}; // Replace with actual Opportunity Id
+FutureOpportunityUpdater.updateOpportunityAmount(oppIds);
+*/
