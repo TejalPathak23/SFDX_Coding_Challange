@@ -1,0 +1,24 @@
+global class DeactivateInactiveOwnerAccountsBatch implements Database.Batchable<SObject> {
+    global Database.QueryLocator start(Database.BatchableContext bc) {
+        return Database.getQueryLocator(
+            'SELECT Id, Active__c FROM Account WHERE Owner.IsActive = FALSE'
+        );
+    }
+
+    global void execute(Database.BatchableContext bc, List<Account> scope) {
+        for (Account acc : scope) {
+            acc.Active__c = 'Inactive'; // Use 'Inactive' if Active__c is a Picklist field
+        }
+        update scope;
+    }
+
+    global void finish(Database.BatchableContext bc) {
+        System.debug('Batch execution completed.');
+    }
+}
+
+/* ------- o/p --------
+DeactivateInactiveOwnerAccountsBatch batchJob = new DeactivateInactiveOwnerAccountsBatch();
+Database.executeBatch(batchJob);
+
+*/
