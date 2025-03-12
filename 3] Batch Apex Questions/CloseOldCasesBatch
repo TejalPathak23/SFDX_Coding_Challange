@@ -1,0 +1,23 @@
+global class CloseOldCasesBatch implements Database.Batchable<SObject> {
+    global Database.QueryLocator start(Database.BatchableContext bc) {
+        return Database.getQueryLocator(
+            'SELECT Id, Status FROM Case WHERE Status IN (\'New\', \'In Progress\') AND CreatedDate <= LAST_N_DAYS:30'
+        );
+    }
+
+    global void execute(Database.BatchableContext bc, List<Case> scope) {
+        for (Case c : scope) {
+            c.Status = 'Closed';
+        }
+        update scope;
+    }
+
+    global void finish(Database.BatchableContext bc) {
+        System.debug('Batch execution completed.');
+    }
+}
+
+/* ---- o/p code -----
+CloseOldCasesBatch batchJob = new CloseOldCasesBatch();
+Database.executeBatch(batchJob);
+*/
