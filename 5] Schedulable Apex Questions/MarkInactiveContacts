@@ -1,0 +1,33 @@
+global class MarkInactiveContacts implements Schedulable {
+    global void execute(SchedulableContext sc) {
+        Date sixMonthsAgo = Date.today().addMonths(-6);
+        
+        Set<Id> activeContactIds = new Set<Id>();
+
+        for (OpportunityContactRole ocr : [SELECT ContactId FROM OpportunityContactRole WHERE Opportunity.CloseDate >= :sixMonthsAgo]) {
+            if (ocr.ContactId != null) {
+                activeContactIds.add(ocr.ContactId);
+            }
+        }
+
+        List<Contact> contactsToUpdate = [
+            SELECT Id, HasOptedOutOfEmail 
+            FROM Contact 
+            WHERE Id NOT IN :activeContactIds
+        ];
+
+        for (Contact c : contactsToUpdate) {
+            c.HasOptedOutOfEmail = true;
+        }
+
+        if (!contactsToUpdate.isEmpty()) {
+            update contactsToUpdate;
+        }
+    }
+}
+
+/* ------------o/p---------
+MarkInactiveContacts job = new MarkInactiveContacts();
+String cronExpression = '0 0 0 1,16 * ?'; // Runs on the 1st and 16th of every month
+System.schedule('Bi-Monthly Contact Email Opt-Out', cronExpression, job);
+*/
