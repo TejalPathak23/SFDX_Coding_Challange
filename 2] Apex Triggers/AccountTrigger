@@ -1,0 +1,38 @@
+trigger AccountTrigger on Account (before delete) {
+    Set<Id> accountIds = new Set<Id>();
+
+    for (Account acc : Trigger.old) {
+        if (acc.Id != null) {
+            accountIds.add(acc.Id);
+        }
+    }
+
+    if (!accountIds.isEmpty()) {
+        Map<Id, Account> accountWithContacts = new Map<Id, Account>();
+
+        for (Account acc : [SELECT Id FROM Account WHERE Id IN :accountIds AND Id IN (SELECT AccountId FROM Contact)]) {
+            accountWithContacts.put(acc.Id, acc);
+        }
+
+        for (Account acc : Trigger.old) {
+            if (accountWithContacts.containsKey(acc.Id)) {
+                acc.addError('Cannot delete this Account as it has related Contacts.');
+            }
+        }
+    }
+}
+
+/* --------o/p code---------
+Account acc = new Account(Name = 'Test Account');
+insert acc;
+
+Contact con = new Contact(LastName = 'Test Contact', AccountId = acc.Id);
+insert con;
+
+try {
+    delete acc;
+} catch (DmlException e) {
+    System.debug('Deletion prevented: ' + e.getMessage());
+}
+
+*/
