@@ -1,0 +1,26 @@
+global class ReduceOldProposalAmounts implements Schedulable {
+    global void execute(SchedulableContext sc) {
+        Date sixtyDaysAgo = Date.today().addDays(-60);
+        
+        List<Opportunity> oppsToUpdate = [
+            SELECT Id, Amount 
+            FROM Opportunity 
+            WHERE StageName = 'Proposal' 
+            AND CreatedDate < :sixtyDaysAgo
+        ];
+        
+        for (Opportunity opp : oppsToUpdate) {
+            opp.Amount = opp.Amount * 0.95;
+        }
+        
+        if (!oppsToUpdate.isEmpty()) {
+            update oppsToUpdate;
+        }
+    }
+}
+
+/*
+ReduceOldProposalAmounts job = new ReduceOldProposalAmounts();
+String cronExpression = '0 0 0 1 * ?'; // Runs on the 1st of every month at midnight
+System.schedule('Monthly Opportunity Discount', cronExpression, job);
+*/
