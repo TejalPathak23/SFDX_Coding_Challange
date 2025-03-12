@@ -1,0 +1,26 @@
+global class CloseOldWaitingCases implements Schedulable {
+    global void execute(SchedulableContext sc) {
+        Date sevenDaysAgo = Date.today().addDays(-7);
+        
+        List<Case> casesToUpdate = [
+            SELECT Id, Status 
+            FROM Case 
+            WHERE Status = 'Waiting on Customer' 
+            AND LastModifiedDate < :sevenDaysAgo
+        ];
+        
+        for (Case c : casesToUpdate) {
+            c.Status = 'Closed';
+        }
+        
+        if (!casesToUpdate.isEmpty()) {
+            update casesToUpdate;
+        }
+    }
+}
+
+/* ---------o/p code--------
+CloseOldWaitingCases job = new CloseOldWaitingCases();
+String cronExpression = '0 0 0 ? * 2'; // Runs every Monday at midnight
+System.schedule('Weekly Case Closure', cronExpression, job);
+*/
