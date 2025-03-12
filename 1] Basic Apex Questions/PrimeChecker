@@ -63,12 +63,12 @@ public class PrimeChecker {
 }
 
 /* -------- o/p code ---------
-// Test the prime checker
+
 System.debug('Is 2 prime? ' + PrimeChecker.isPrime(2));
 System.debug('Is 7 prime? ' + PrimeChecker.isPrime(7));
 System.debug('Is 10 prime? ' + PrimeChecker.isPrime(10));
 
-// Find primes up to 30
+
 List<Integer> primes = PrimeChecker.findPrimesUpTo(30);
 System.debug('Prime numbers up to 30: ' + primes);
 */
