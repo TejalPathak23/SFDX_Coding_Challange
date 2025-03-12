@@ -1,0 +1,30 @@
+public class UpdateContactEmailDomain implements Queueable, Database.Stateful {
+    private List<Contact> contactsToUpdate;
+
+    public UpdateContactEmailDomain() {
+        contactsToUpdate = new List<Contact>();
+    }
+
+    public void execute(QueueableContext context) {
+        // Query Contacts with emails ending in '@oldcompany.com'
+        List<Contact> contacts = [SELECT Id, Email FROM Contact WHERE Email LIKE '%@oldcompany.com'];
+
+        // Update email domain
+        for (Contact con : contacts) {
+            String newEmail = con.Email.replace('@oldcompany.com', '@newcompany.com');
+            con.Email = newEmail;
+            contactsToUpdate.add(con);
+        }
+
+        // Update Contacts in the database
+        if (!contactsToUpdate.isEmpty()) {
+            update contactsToUpdate;
+        }
+    }
+}
+
+/* ---------- o/p ---------
+UpdateContactEmailDomain job = new UpdateContactEmailDomain();
+System.enqueueJob(job);
+
+*/
