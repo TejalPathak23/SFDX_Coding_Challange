@@ -1,0 +1,74 @@
+public class PrimeChecker {
+ 
+    public static Boolean isPrime(Integer num) {
+        
+        if (num <= 1) {
+            return false; 
+        }
+        
+        if (num <= 3) {
+            return true; 
+        }
+        
+        
+        if (Math.mod(num, 2) == 0) {
+            return false;
+        }
+        
+       
+        Integer sqrtNum = (Integer)Math.sqrt(num);
+        for (Integer i = 3; i <= sqrtNum; i += 2) {
+            if (Math.mod(num, i) == 0) {
+                return false;
+            }
+        }
+        
+        return true;
+    }
+    
+    
+    public static List<Integer> findPrimesUpTo(Integer max) {
+        if (max < 2) {
+            return new List<Integer>();
+        }
+        
+      
+        Boolean[] sieve = new Boolean[max + 1];
+        for (Integer i = 0; i <= max; i++) {
+            sieve[i] = true;
+        }
+        
+      
+        sieve[0] = false;
+        sieve[1] = false;
+        
+        for (Integer i = 2; i * i <= max; i++) {
+            if (sieve[i]) {
+                for (Integer j = i * i; j <= max; j += i) {
+                    sieve[j] = false;
+                }
+            }
+        }
+        
+        
+        List<Integer> primes = new List<Integer>();
+        for (Integer i = 2; i <= max; i++) {
+            if (sieve[i]) {
+                primes.add(i);
+            }
+        }
+        
+        return primes;
+    }
+}
+
+/* -------- o/p code ---------
+// Test the prime checker
+System.debug('Is 2 prime? ' + PrimeChecker.isPrime(2));
+System.debug('Is 7 prime? ' + PrimeChecker.isPrime(7));
+System.debug('Is 10 prime? ' + PrimeChecker.isPrime(10));
+
+// Find primes up to 30
+List<Integer> primes = PrimeChecker.findPrimesUpTo(30);
+System.debug('Prime numbers up to 30: ' + primes);
+*/
