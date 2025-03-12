@@ -5,3 +5,12 @@ trigger SetLastNameTrigger on Contact (before insert) {
         }
     }
 }
+
+/* -------- o/p ------
+Contact testContact = new Contact(FirstName = 'John');
+insert testContact;
+
+Contact insertedContact = [SELECT Id, FirstName, LastName FROM Contact WHERE Id = :testContact.Id];
+System.debug('Inserted Contact LastName: ' + insertedContact.LastName);
+
+*/
