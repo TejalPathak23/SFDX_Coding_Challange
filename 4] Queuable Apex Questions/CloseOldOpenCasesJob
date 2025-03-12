@@ -1,0 +1,30 @@
+public class CloseOldOpenCasesJob implements Queueable {
+    public void execute(QueueableContext context) {
+        // Calculate the date 90 days prior to today
+        Date ninetyDaysAgo = Date.today().addDays(-90);
+        
+        // Query open Cases created more than 90 days ago
+        List<Case> casesToClose = [
+            SELECT Id, Status 
+            FROM Case 
+            WHERE Status != 'Closed' 
+            AND CreatedDate < :ninetyDaysAgo
+        ];
+        
+        // Update the status of each Case to 'Closed'
+        for (Case c : casesToClose) {
+            c.Status = 'Closed';
+        }
+        
+        // Perform the update operation
+        if (!casesToClose.isEmpty()) {
+            update casesToClose;
+        }
+    }
+}
+
+/* -------- o/p ----------
+CloseOldOpenCasesJob job = new CloseOldOpenCasesJob();
+System.enqueueJob(job);
+
+*/
