@@ -58,20 +58,20 @@ public class FactorialCalculator {
 }
 
 /*----------- o/p code ---------
-// Test factorial calculations
+
 try {
     System.debug('Factorial of 0: ' + FactorialCalculator.calculateFactorial(0));
     System.debug('Factorial of 1: ' + FactorialCalculator.calculateFactorial(1));
     System.debug('Factorial of 5: ' + FactorialCalculator.calculateFactorial(5));
     System.debug('Factorial of 10: ' + FactorialCalculator.calculateFactorial(10));
     
-    // Test recursive implementation
+   
     System.debug('Recursive factorial of 7: ' + FactorialCalculator.calculateFactorialRecursive(7));
     
-    // Test larger factorial
+    
     System.debug('Large factorial of 20: ' + FactorialCalculator.calculateLargeFactorial(20));
     
-    // This will likely cause an overflow
+   
     // System.debug('Factorial of 100: ' + FactorialCalculator.calculateFactorial(100));
 } catch (Exception e) {
     System.debug('Error: ' + e.getMessage());
