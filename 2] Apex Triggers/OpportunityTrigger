@@ -1,0 +1,19 @@
+trigger OpportunityTrigger on Opportunity (before update) {
+    for (Opportunity opp : Trigger.new) {
+        if (opp.StageName == 'Closed Won' && opp.StageName != Trigger.oldMap.get(opp.Id).StageName) {
+            opp.CloseDate = Date.today();
+        }
+    }
+}
+
+/*
+Opportunity testOpp = new Opportunity(Name = 'Test Opportunity', StageName = 'Prospecting', CloseDate = Date.today());
+insert testOpp;
+
+testOpp.StageName = 'Closed Won';
+update testOpp;
+
+Opportunity updatedOpp = [SELECT Id, StageName, CloseDate FROM Opportunity WHERE Id = :testOpp.Id];
+System.debug('Updated CloseDate: ' + updatedOpp.CloseDate);
+
+*/
