@@ -21,7 +21,7 @@ public class FutureTaskNotifier {
         }
     }
 }
-/*
+/* --------o/p code-------
 Set<Id> taskIds = new Set<Id>{'00TXXXXXXXXXXXX'}; // Replace with actual Task Id
 FutureTaskNotifier.sendTaskCompletionEmail(taskIds);
 */
