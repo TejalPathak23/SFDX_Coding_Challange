@@ -1,0 +1,14 @@
+public class FutureLeadUpdater {
+    @future
+    public static void markLeadsAsOptOut(Set<Id> leadIds) {
+        List<Lead> leadsToUpdate = [SELECT Id, HasOptedOutOfEmail FROM Lead WHERE Id IN :leadIds];
+
+        for (Lead lead : leadsToUpdate) {
+            lead.HasOptedOutOfEmail = true;
+        }
+
+        if (!leadsToUpdate.isEmpty()) {
+            update leadsToUpdate;
+        }
+    }
+}
