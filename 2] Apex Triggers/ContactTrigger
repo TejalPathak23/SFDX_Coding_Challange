@@ -1,0 +1,47 @@
+trigger ContactTrigger on Contact (after update) {
+    // Create a set to hold Account IDs that need updating
+    Set<Id> accountIdsToUpdate = new Set<Id>();
+
+    // Iterate through the updated contacts
+    for (Contact con : Trigger.new) {
+        // Check if the Phone number has changed
+        if (con.Phone != Trigger.oldMap.get(con.Id).Phone) {
+            accountIdsToUpdate.add(con.AccountId);
+        }
+    }
+
+    // If there are Accounts to update
+    if (!accountIdsToUpdate.isEmpty()) {
+        // Query Accounts and their related Contacts
+        List<Account> accountsToUpdate = [
+            SELECT Id, Phone, (SELECT Phone FROM Contacts)
+            FROM Account
+            WHERE Id IN :accountIdsToUpdate
+        ];
+
+        // Iterate through each Account
+        for (Account acc : accountsToUpdate) {
+            // Initialize a variable to track if an update is needed
+            Boolean updateNeeded = false;
+
+            // Iterate through related Contacts
+            for (Contact relatedCon : acc.Contacts) {
+                // If a Contact has a non-null Phone number
+                if (relatedCon.Phone != null) {
+                    // Update Account's Phone to this Contact's Phone
+                    acc.Phone = relatedCon.Phone;
+                    updateNeeded = true;
+                    break; // Exit loop after the first valid Phone is found
+                }
+            }
+
+            // If no Contacts have a Phone number, clear the Account's Phone
+            if (!updateNeeded) {
+                acc.Phone = null;
+            }
+        }
+
+        // Update the modified Accounts
+        update accountsToUpdate;
+    }
+}
